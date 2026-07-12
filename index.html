@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&amp;family=Noto+Sans+TC:wght@400;500;700;900&amp;family=Bricolage+Grotesque:wght@400;600;800&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#e9e5db;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-text-size-adjust:100%}
+*{-webkit-tap-highlight-color:transparent}
+</style>
+</helmet>
+
+<div style="width:100%;max-width:480px;margin:0 auto;min-height:100vh;box-shadow:0 0 40px rgba(0,0,0,.12);overflow:hidden">
+  <div style="{{themeVars}}">
+
+    <!-- Hero -->
+    <div style="padding:48px 24px 32px;background:var(--hero-bg);border-bottom:1px solid var(--hairline)">
+      <div style="font:600 12px/1 'Noto Sans TC',sans-serif;letter-spacing:.2em;color:var(--eyebrow);margin-bottom:16px">2026/09/09-2026/09/13</div>
+      <div style="font-family:var(--font-display);font-weight:var(--display-weight);font-size:clamp(38px,10vw,52px);line-height:1.05;color:var(--hero-text)">河內＆沙壩</div>
+      <div style="font-family:var(--font-display);font-weight:400;font-size:16px;line-height:1.6;margin-top:10px;color:var(--hero-muted)">5天4夜越南放鬆遊</div>
+      <div style="margin-top:22px;display:flex;flex-wrap:wrap;gap:8px;font:500 12px/1 'Noto Sans TC',sans-serif;color:var(--hero-muted)">
+        <span style="padding:6px 12px;border:1px solid var(--pill-border);border-radius:var(--radius,999px)">河內＋沙壩</span>
+        <span style="padding:6px 12px;border:1px solid var(--pill-border);border-radius:var(--radius,999px)">5天4夜</span>
+        <span style="padding:6px 12px;border:1px solid var(--pill-border);border-radius:var(--radius,999px)">吃吃喝喝</span>
+        <span style="padding:6px 12px;border:1px solid var(--pill-border);border-radius:var(--radius,999px)">按摩/刺青</span>
+      </div>
+      <div style="font-family:var(--font-display);font-weight:400;font-size:14px;line-height:1.7;margin-top:16px;color:var(--hero-muted)">
+        <b>去程資訊：<span style="font-weight:normal">長榮 BR397 09:00-11:05</span><br>回程資訊：<span style="font-weight:normal">長榮 BR386 18:00-21:55</span></b>
+      </div>
+    </div>
+
+    <!-- Day tab bar -->
+    <sc-if value="{{scrollMode}}" hint-placeholder-val="{{false}}">
+      <div style="padding:14px 20px;font:500 12px 'Noto Sans TC',sans-serif;color:var(--muted);border-bottom:1px solid var(--hairline)">完整行程・向下捲動查看全部5天</div>
+    </sc-if>
+    <sc-if value="{{!scrollMode}}" hint-placeholder-val="{{true}}">
+      <div style="position:sticky;top:0;z-index:10;background:var(--page-bg);display:flex;gap:6px;padding:10px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid var(--hairline)">
+        <sc-for list="{{tabs}}" as="tab" hint-placeholder-count="5">
+          <div onClick="{{ tab.onClick }}" style="flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:10px 14px;min-height:44px;box-sizing:border-box;border-radius:var(--radius,12px);cursor:pointer;min-width:60px;background:{{tab.bg}};transition:background .15s">
+            <span style="font-family:var(--font-display);font-weight:700;font-size:15px;color:{{tab.numColor}}">{{ tab.num }}</span>
+            <span style="font:500 10px 'Noto Sans TC',sans-serif;color:{{tab.labelColor}};white-space:nowrap;text-align:center">{{ tab.shortLabel }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-for list="{{days}}" as="day" hint-placeholder-count="5">
+      <sc-if value="{{day.visible}}" hint-placeholder-val="{{false}}">
+        <div style="padding:28px 20px 8px">
+          <div style="display:flex;align-items:baseline;gap:12px">
+            <div style="font-family:var(--font-display);font-weight:var(--display-weight);font-size:40px;line-height:1;color:var(--accent)">{{ day.num }}</div>
+            <div style="font-family:var(--font-display);font-weight:600;font-size:19px;line-height:1.3;color:var(--text)">{{ day.title }}</div>
+          </div>
+          <div style="font:400 14px/1.7 'Noto Sans TC',sans-serif;color:var(--muted);margin-top:10px">{{ day.overview }}</div>
+        </div>
+
+        <div style="margin:16px 20px 0;border-top:1px solid var(--hairline)">
+          <sc-for list="{{day.landmarks}}" as="lm" hint-placeholder-count="5">
+            <div style="padding:14px 0;border-bottom:1px solid var(--hairline)">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="flex:none;font:600 10px 'Noto Sans TC',sans-serif;letter-spacing:.05em;color:{{lm.typeColor}};min-width:30px">{{ lm.type }}</span>
+                <span style="font-family:var(--font-display);font-weight:600;font-size:16px;line-height:1.3;color:var(--text);flex:1">{{ lm.name }}</span>
+                <span onClick="{{ lm.onToggle }}" style="flex:none;font:600 18px/1 ui-monospace,monospace;color:var(--muted);width:44px;height:44px;line-height:44px;text-align:center;cursor:pointer;border-radius:50%">{{ lm.indicator }}</span>
+              </div>
+              <div style="font:400 13px/1.6 'Noto Sans TC',sans-serif;color:var(--muted);margin-top:4px;padding-left:38px">{{ lm.note }}</div>
+              <sc-if value="{{lm.expanded}}" hint-placeholder-val="{{false}}">
+                <div style="margin-top:10px;padding-left:38px;padding-right:2px">
+                  <div style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:var(--text);padding:10px 12px;background:var(--hairline);border-radius:8px;margin-bottom:10px;white-space:pre-line">{{ lm.detail }}</div>
+                  <div style="font:400 12px/1.6 'Noto Sans TC',sans-serif;color:var(--muted);margin-bottom:10px">地址：{{ lm.address }}</div>
+                  <iframe src="{{lm.mapUrl}}" style="width:100%;height:180px;border:0;border-radius:10px;display:block" loading="lazy"></iframe>
+                  <a href="{{lm.openUrl}}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:10px;padding:8px 2px;font:500 12px 'Noto Sans TC',sans-serif;color:var(--accent);text-decoration:none">在 Google Maps 開啟 →</a>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </sc-for>
+
+    <div style="padding:22px 20px 40px;border-top:1px solid var(--hairline);font:400 12px/1.6 'Noto Sans TC',sans-serif;color:var(--muted);text-align:center">行程內容持續補充・僅供朋友揪團參考</div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;theme&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;編輯手札&quot;, &quot;options&quot;: [&quot;編輯手札&quot;, &quot;現代日誌&quot;, &quot;大膽冒險&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;外觀氛圍&quot; },
+  &quot;browse&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;分頁瀏覽&quot;, &quot;options&quot;: [&quot;分頁瀏覽&quot;, &quot;長捲動&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;瀏覽方式&quot; },
+  &quot;highlightsOnly&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;內容範圍&quot; }
+}">
+const MAPS_API_KEY = '__GOOGLE_MAPS_API_KEY__'; // injected at deploy time by GitHub Actions, see .github/workflows/deploy.yml
+
+const TYPE_COLOR = {
+  '景點': 'oklch(48% 0.1 150)',
+  '餐廳': 'oklch(55% 0.13 40)',
+  '交通': 'oklch(45% 0.05 250)',
+  '住宿': 'oklch(45% 0.09 310)'
+};
+
+const DAYS = [
+  {
+    num: '第一天\n', title: '河內市區・老城美食', shortLabel: '9/9(三) ', overview: '首都探索與美食，深夜體驗臥鋪夜車前往沙壩', photo: '老城區街景',
+    landmarks: [
+      { name: '昇龍皇城遺址', mapName: 'Hoang Thanh Thang Long Imperial Citadel', plusCode: '2RPR+34', city: 'Hanoi', type: '景點', note: '古蹟世界文化遺產，越南版故宮', address: '19c Hoàng Diệu, Điện Biên, Ba Đình, Hà Nội', detail: '開放時間：08:00–17:00' },
+      { name: '聖約瑟夫大教堂', mapName: "St. Joseph's Cathedral", plusCode: '2RHX+CG', city: 'Hanoi', type: '景點', note: '必去-越南最古老的天主教堂', address: '1 P. Nhà Thờ, Hoàn Kiếm, Hà Nội', detail: '開放時間：08:00–11:00、14:00–17:00。\n穿著限制：進入教堂內部時建議穿著端莊。\n建議穿著：避免短褲、無袖上衣及過度暴露服裝；脫帽並保持安靜' },
+      { name: '三十六古街', mapName: 'Hanoi Old Quarter', plusCode: '2VM2+J3', city: 'Hanoi', type: '景點', note: '越南的老城區逛街享受市區風光', address: '2A P. Hàng Bồ, Hoàn Kiếm, Hà Nội', detail: '開放時間：街區全天可逛，熱鬧街區' },
+      { name: 'Banh Mi 25', mapName: 'Banh Mi 25', plusCode: '2RPX+CC', city: 'Hanoi', type: '餐廳', note: '必去-最有名的越南麵包，做好排隊的準備', address: '25 P. Hàng Cá, Hoàn Kiếm, Hà Nội', detail: '開放時間：07:00 - 21:00' },
+      { name: 'Pho 10 Ly Quoc Su', mapName: 'Pho 10 Ly Quoc Su', plusCode: '2RJX+5G', city: 'Hanoi', type: '餐廳', note: '有名的越南河粉店，有獲得米其林指南', address: '10 P. Lý Quốc Sư, Hoàn Kiếm, Hà Nội', detail: '開放時間：06:00–22:00' },
+      { name: 'Cafe Giảng', mapName: 'Giang Cafe', plusCode: '2VM3+9R', city: 'Hanoi', type: '餐廳', note: '蛋咖啡創始店', address: '39 P. Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội', detail: '開放時間： 07:00–22:00' },
+      { name: 'Bánh Mỳ Mama', mapName: 'Banh My Mama', plusCode: '2RHX+PP', city: 'Hanoi', type: '餐廳', note: '必去-網路上傳最好吃的越南麵包', address: '54 P. Lý Quốc Sư, Hoàn Kiếm, Hà Nội', detail: '開放時間：08:00-19:00' },
+      { name: '河內火車站', mapName: 'Hanoi Railway Station', plusCode: '2RGV+P9', city: 'Hanoi', type: '交通', note: '21:00取票候車，22:00搭SP3臥鋪火車', address: '120 P. Lê Duẩn, Đống Đa, Hà Nội', detail: '請補充「河內火車站」的詳細介紹（開放時間、亮點、注意事項⋯）' }
+    ]
+  },
+  {
+    num: '第二天', title: '沙壩梯田，在地體驗', shortLabel: '9/10(四)', overview: '貓貓村健行、高空滑車、紅瑤風味鍋，夜市收尾', photo: '沙壩梯田',
+    landmarks: [
+      { name: '老街火車站', mapName: 'Lao Cai Railway Station', plusCode: 'MRMR+97', city: 'Lao Cai', type: '交通', note: '預計 06:00抵達，轉接駁車往沙壩', address: 'Nguyễn Huệ, Lào Cai', detail: '預計抵達時間06:00，前往沙壩市區約１小時\n' },
+      { name: '貓貓村', mapName: 'Cat Cat Village', plusCode: '8RJM+CH', city: 'Sapa', type: '景點', note: '北越沙壩黑苗族少數民族村落', address: 'Thôn Cát Cát, Tả Van, Lào Cai', detail: '開放時間：06:00–18:00' },
+      { name: 'Alpine Coaster', mapName: 'Fansipan Legend Alpine Coaster', plusCode: '8VC8+XJ', city: 'Sapa', type: '景點', note: '高空滑車，偏刺激', address: 'Lao Chải, Sa Pa, Lào Cai', detail: '開放時間：08:00–17:00\n很吃天氣，需當天決定是否前往' },
+      { name: 'Viettrekking Coffee', mapName: 'Viettrekking Coffee & Bistro', plusCode: '8RMP+GM', city: 'Sapa', type: '餐廳', note: '沙壩山景咖啡館，可以休息', address: '33 Hoàng Liên, Sa Pa, Lào Cai', detail: '開放時間： 07:00–22:00\n可以先回飯店整裝休息後前往拍美照。' },
+      { name: 'Moana Sapa', mapName: 'Moana Cafe Sapa', plusCode: '8RGW+W9', city: 'Sapa', type: '景點', note: '沙壩人氣打卡觀光景點', address: 'số 68 Violet, Sa Pa, Lào Cai', detail: '開放時間：07:00–18:00\n以巨手、天梯等裝置藝術聞名，適合觀景拍照\n' },
+      { name: 'Red Dzao House', mapName: 'Red Dzao House Restaurant', plusCode: '8RPQ+FW', city: 'Sapa', type: '餐廳', note: '有名的鮭魚火鍋，提前訂位', address: '4b Thác Bạc, Sa Pa, Lào Cai', detail: '開放時間：10:00-21:00' },
+      { name: '沙壩夜市/沙壩市區逛街', mapName: 'Sapa Night Market', plusCode: '8RMP+R4', city: 'Sapa', type: '景點', note: '週五六日限定，烤串手工藝品', address: 'Sa Pa, Lào Cai', detail: '我們這天是週四，沒有夜市，所以就逛市區。' }
+    ]
+  },
+  {
+    num: '第三天', title: '越南第一高峰', shortLabel: '9/11 (五)', overview: '早起前往越南第一高峰，午後返回河內享受夜生活', photo: '番西邦峰纜車',
+    landmarks: [
+      { name: '番西邦峰', mapName: 'Fansipan Legend Cable Car Station', plusCode: '8RPF+QM', city: 'Sapa', type: '景點', note: '必去-越南最高峰雲端美景', address: 'Nguyễn Chí Thanh, Sa Pa, Lào Cai', detail: '開放時間：07:30–17:30\n攻略：須先搭小火車然後轉纜車\n建議提早到，天氣狀況會較好' },
+      { name: '沙壩市集/市區', mapName: 'Sapa Market', plusCode: '8RMQ+2H', city: 'Sapa', type: '景點', note: '離開沙壩前最後準備', address: 'Sa Pa, Lào Cai', detail: '預計簡易吃個中飯，然後前往河內\n沙壩到河內約6小時車程' },
+      { name: '河內老城區飯店-待訂', plusCode: '2RJX+XX', city: 'Hanoi', type: '住宿', note: '包車約19:00抵達，Check-in（尚未指定飯店名稱）', address: 'Hoàn Kiếm, Hà Nội', detail: '代訂\n' },
+      { name: '河內週末夜市', mapName: 'Hanoi Weekend Night Market', plusCode: '2VJ2+WH', city: 'Hanoi', type: '景點', note: '適合走走吃小吃逛逛', address: '104 P. Hàng Đào, Hoàn Kiếm, Hà Nội', detail: '開放時間：週五～週日 19:00-23:00\n位於三十六古街附近' },
+      { name: 'Hanoi House Cocktail Bar', mapName: 'Hanoi House Cocktail Bar & Restaurant', plusCode: '2RHX+MQ', city: 'Hanoi', type: '餐廳', note: '教堂旁酒吧，可欣賞湖景', address: '47A P. Lý Quốc Sư, Hoàn Kiếm, Hà Nội', detail: '開放時間：10:00-00:00\n位於老城區二樓，入口低調，適合晚餐後小酌' }
+    ]
+  },
+  {
+    num: '第四天', title: '河內深度一日', shortLabel: '9/12 (六)\n', overview: '陵寢古寺、歷史遺跡、米其林美食馬拉松', photo: '河內法式建築',
+    landmarks: [
+      { name: '胡志明陵寢', mapName: 'Ho Chi Minh Mausoleum', plusCode: '2RGP+QF', city: 'Hanoi', type: '景點', note: '越南最莊嚴神聖的政治地標。', address: 'Hùng Vương, Ba Đình, Hà Nội', detail: '開放時間：07:00-10:00\n穿著限制：有限制，需穿著端莊。\n' },
+      { name: '鎮國寺', mapName: 'Tran Quoc Pagoda', plusCode: '2RFP+WJ', city: 'Hanoi', type: '景點', note: '越南河內最古老的佛教寺廟', address: 'Thanh Niên, Tây Hồ, Hà Nội', detail: '開放時間：07:30–11:00、13:30–17:00\n穿著限制：宗教場所' },
+      { name: 'Bún chả Hương Liên', mapName: 'Bun Cha Huong Lien', plusCode: '2V93+7H', city: 'Hanoi', type: '餐廳', note: '歐巴馬吃過的烤豬肉米線，午餐', address: '24 P. Lê Văn Hưu, Hà Nội', detail: '開放時間：08:00-20:00\n歐巴馬套餐 (Combo Obama)：內含一份烤肉米線、一個海鮮春捲與一瓶河內啤酒，是初訪者最省心的全套體驗組合。\n' },
+      { name: '監獄博物館', mapName: 'Hoa Lo Prison', plusCode: '2RJQ+RJ', city: 'Hanoi', type: '景點', note: '法國殖民監獄＋越戰美軍戰俘營', address: '1 P. Hỏa Lò, Hoàn Kiếm, Hà Nội', detail: '開放時間：08:00-17:00\n' },
+      { name: '歌劇院', mapName: 'Hanoi Opera House', plusCode: '2RJP+9W', city: 'Hanoi', type: '景點', note: '法式建築外觀打卡', address: '1 Tràng Tiền, Hoàn Kiếm, Hà Nội', detail: '外面拍個照就可以離開' },
+      { name: '還劍湖', mapName: 'Hoan Kiem Lake', plusCode: '2VJ2+7X', city: 'Hanoi', type: '景點', note: '一個湖，有紅色的橋，景點之一', address: 'Đinh Tiên Hoàng, Hoàn Kiếm, Hà Nội', detail: '適合不熱的時候散步' },
+      { name: 'Loading T Café', mapName: 'Loading T Cafe', plusCode: '2RJX+6C', city: 'Hanoi', type: '餐廳', note: '雞蛋咖啡', address: '8 P. Chân Cầm, Hoàn Kiếm, Hà Nội', detail: '開放時間：08:00–18:00' },
+      { name: '火車咖啡街', mapName: 'Hanoi Train Street', plusCode: '2RHV+XG', city: 'Hanoi', type: '景點', note: '有火車會很近的經過，前往需要先看火車時刻表', address: '3 Trần Phú, Hoàn Kiếm, Hà Nội', detail: '很多咖啡廳，需要先確認火車時刻表' },
+      { name: 'Tầm vị', mapName: 'Tam Vi Restaurant', plusCode: '2RHQ+JQ', city: 'Hanoi', type: '餐廳', note: '米其林一星餐廳，以傳統北越家常菜聞名', address: '4b P. Yên Thế, Hà Nội', detail: '需提前訂位\n開放時間：11:00–14:30、17:00–21:30' },
+      { name: 'The Haflington', mapName: 'The Haflington', plusCode: '2RPW+MG', city: 'Hanoi', type: '餐廳', note: '亞洲50大酒吧', address: '94 P. Hàng Mã, Hoàn Kiếm, Hà Nội', detail: '需要提前訂位，位置有限\n開放時間：15:00–00:00' }
+    ]
+  },
+  {
+    num: '第五天', title: '最後一天自由行動', shortLabel: '9/13 (日)', overview: '預計最晚約16:00要抵達機場，18:00的飛機', photo: '河內咖啡廳',
+    landmarks: [
+      { name: 'Eggyolk Coffee', mapName: 'Eggyolk Coffee', plusCode: '2RHX+97', city: 'Hanoi', type: '餐廳', note: '算是漂亮的咖啡廳，最後早晨', address: '58 P. Ấu Triệu, Hoàn Kiếm, Hà Nội', detail: '開放時間：06:30–22:30\n' },
+      { name: '河內內排機場', mapName: 'Noi Bai International Airport', plusCode: '3R2W+RJ', city: 'Hanoi', type: '交通', note: '最晚約16:00要抵達', address: 'Phú Trạch, Sóc Sơn, Hà Nội', detail: '回程航班：18:00 長榮 BR386' }
+    ]
+  }
+];
+
+const THEMES = {
+  '編輯手札': {
+    pageBg: 'oklch(97% 0.015 85)', text: 'oklch(22% 0.02 85)', muted: 'oklch(45% 0.02 85)',
+    hairline: 'oklch(85% 0.02 85)', accent: 'oklch(48% 0.1 150)',
+    heroBg: 'oklch(97% 0.015 85)', heroText: 'oklch(22% 0.02 85)', heroMuted: 'oklch(40% 0.03 85)',
+    eyebrow: 'oklch(45% 0.1 40)', pillBorder: 'oklch(70% 0.03 85)',
+    tabActiveBg: 'oklch(48% 0.1 150)', radius: '0px',
+    fontDisplay: "'Noto Serif TC',serif", displayWeight: '700'
+  },
+  '現代日誌': {
+    pageBg: 'oklch(99% 0.004 90)', text: 'oklch(20% 0.01 90)', muted: 'oklch(40% 0.01 90)',
+    hairline: 'oklch(90% 0.005 90)', accent: 'oklch(45% 0.1 40)',
+    heroBg: 'oklch(28% 0.05 155)', heroText: 'oklch(97% 0.01 90)', heroMuted: 'oklch(85% 0.02 90)',
+    eyebrow: 'oklch(75% 0.06 85)', pillBorder: 'oklch(75% 0.06 85)',
+    tabActiveBg: 'oklch(28% 0.05 155)', radius: '16px',
+    fontDisplay: "'Noto Sans TC',sans-serif", displayWeight: '900'
+  },
+  '大膽冒險': {
+    pageBg: 'oklch(18% 0.008 90)', text: 'oklch(95% 0.008 90)', muted: 'oklch(70% 0.01 90)',
+    hairline: 'oklch(30% 0.01 90)', accent: 'oklch(65% 0.14 35)',
+    heroBg: 'oklch(18% 0.008 90)', heroText: 'oklch(95% 0.008 90)', heroMuted: 'oklch(75% 0.01 90)',
+    eyebrow: 'oklch(65% 0.14 35)', pillBorder: 'oklch(40% 0.02 90)',
+    tabActiveBg: 'oklch(65% 0.14 35)', radius: '0px',
+    fontDisplay: "'Bricolage Grotesque',sans-serif", displayWeight: '800'
+  }
+};
+
+class Component extends DCLogic {
+  state = { expanded: {}, activeDay: 0 };
+
+  toggle(id) {
+    this.setState(s => ({ expanded: { ...s.expanded, [id]: !s.expanded[id] } }));
+  }
+
+  setActiveDay(i) {
+    this.setState({ activeDay: i });
+  }
+
+  renderVals() {
+    const activeDay = this.state.activeDay;
+    const t = THEMES[this.props.theme] || THEMES['編輯手札'];
+    const scrollMode = (this.props.browse === '長捲動');
+    const highlightsOnly = !!this.props.highlightsOnly;
+
+    const themeVars = [
+      '--page-bg:' + t.pageBg, '--text:' + t.text, '--muted:' + t.muted,
+      '--hairline:' + t.hairline, '--accent:' + t.accent,
+      '--hero-bg:' + t.heroBg, '--hero-text:' + t.heroText, '--hero-muted:' + t.heroMuted,
+      '--eyebrow:' + t.eyebrow, '--pill-border:' + t.pillBorder,
+      '--tab-active-bg:' + t.tabActiveBg, '--radius:' + t.radius,
+      '--font-display:' + t.fontDisplay, '--display-weight:' + t.displayWeight,
+      'background:var(--page-bg)', 'color:var(--text)', 'width:100%', 'box-sizing:border-box'
+    ].join(';');
+
+    const tabs = DAYS.map((day, di) => ({
+      num: day.num,
+      shortLabel: day.shortLabel,
+      active: di === activeDay,
+      bg: di === activeDay ? 'var(--tab-active-bg)' : 'transparent',
+      numColor: di === activeDay ? '#fff' : 'var(--text)',
+      labelColor: di === activeDay ? 'rgba(255,255,255,.85)' : 'var(--muted)',
+      onClick: () => this.setActiveDay(di)
+    }));
+    const days = DAYS.map((day, di) => ({
+      ...day,
+      isActive: di === activeDay,
+      visible: scrollMode || di === activeDay,
+      landmarks: day.landmarks
+        .filter(lm => !highlightsOnly || lm.type === '景點' || lm.type === '餐廳')
+        .map((lm, li) => {
+          const id = di + '_' + li;
+          const query = encodeURIComponent((lm.mapName || lm.plusCode) + ' ' + lm.city);
+          const expanded = !!this.state.expanded[id];
+          return {
+            ...lm,
+            expanded,
+            indicator: expanded ? '−' : '+',
+            typeColor: lm.type === '景點' ? 'var(--accent)' : (TYPE_COLOR[lm.type] || 'oklch(50% 0.02 90)'),
+            mapUrl: 'https://www.google.com/maps/embed/v1/place?key=' + MAPS_API_KEY + '&q=' + query + '&zoom=16',
+            openUrl: 'https://www.google.com/maps/search/?api=1&query=' + query,
+            onToggle: () => this.toggle(id)
+          };
+        })
+    }));
+    return { days, tabs, themeVars, scrollMode };
+  }
+}
+
+</script>
+</body>
+</html>
