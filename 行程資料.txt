@@ -188,6 +188,15 @@ note: 包車約19:00抵達，Check-in（尚未指定飯店名稱）
 address: Hoàn Kiếm, Hà Nội
 detail: 代訂
 
+name: Bếp Prime
+mapName: Bếp Prime
+plusCode: 2RMW+CP
+city: Hanoi
+type: 餐廳
+note: 火雞火鍋超讚，暖暖胃
+address: 12 Hàng Điếu, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội
+detail: 開放時間：10:00–14:30、17:30–23:00
+
 name: 河內週末夜市
 mapName: Hanoi Weekend Night Market
 plusCode: 2VJ2+WH
@@ -314,6 +323,15 @@ detail: 需要提前訂位，位置有限
 標題: 最後一天自由行動
 摘要: 預計最晚約16:00要抵達機場，18:00的飛機
 -------------------------
+
+name: Pizza 4P’s Bao Khanh
+mapName: Pizza 4P’s Bao Khanh
+plusCode: 2VJ2+C3
+city: Hanoi
+type: 餐廳
+note: 吃Pizza的，回台灣前的最後一餐
+address: 11B P. Báo Khánh, Alley, Hoàn Kiếm, Hà Nội 
+detail: 開放時間：11:00–23:00
 
 name: Eggyolk Coffee
 mapName: Eggyolk Coffee
