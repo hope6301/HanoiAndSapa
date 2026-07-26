@@ -75,6 +75,9 @@ html,body{margin:0;background:#e9e5db;font-family:"Noto Sans TC",system-ui,sans-
                   <div style="font:400 12px/1.6 'Noto Sans TC',sans-serif;color:var(--muted);margin-bottom:10px">地址：{{ lm.address }}</div>
                   <iframe src="{{lm.mapUrl}}" style="width:100%;height:180px;border:0;border-radius:10px;display:block" loading="lazy"></iframe>
                   <a href="{{lm.openUrl}}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:10px;padding:8px 2px;font:500 12px 'Noto Sans TC',sans-serif;color:var(--accent);text-decoration:none">在 Google Maps 開啟 →</a>
+                  <sc-if value="{{lm.hasDetailPage}}" hint-placeholder-val="{{true}}">
+                    <a href="{{lm.detailUrl}}" style="display:inline-block;margin-top:10px;margin-left:16px;padding:8px 2px;font:500 12px 'Noto Sans TC',sans-serif;color:var(--muted);text-decoration:none">景點詳細頁 →</a>
+                  </sc-if>
                 </div>
               </sc-if>
             </div>
@@ -106,8 +109,8 @@ const DAYS = [
   {
     num: '第一天\n', title: '河內市區・老城美食', shortLabel: '9/9(三) ', overview: '首都探索與美食，深夜體驗臥鋪夜車前往沙壩', photo: '老城區街景',
     landmarks: [
-      { name: '昇龍皇城遺址', mapName: 'Hoang Thanh Thang Long Imperial Citadel', plusCode: '2RPR+34', city: 'Hanoi', type: '景點', note: '古蹟世界文化遺產，越南版故宮', address: '19c Hoàng Diệu, Điện Biên, Ba Đình, Hà Nội', detail: '開放時間：08:00–17:00' },
-      { name: '聖約瑟夫大教堂', mapName: "St. Joseph's Cathedral", plusCode: '2RHX+CG', city: 'Hanoi', type: '景點', note: '必去-越南最古老的天主教堂', address: '1 P. Nhà Thờ, Hoàn Kiếm, Hà Nội', detail: '開放時間：08:00–11:00、14:00–17:00。\n穿著限制：進入教堂內部時建議穿著端莊。\n建議穿著：避免短褲、無袖上衣及過度暴露服裝；脫帽並保持安靜' },
+      { name: '昇龍皇城遺址', mapName: 'Hoang Thanh Thang Long Imperial Citadel', plusCode: '2RPR+34', city: 'Hanoi', type: '景點', note: '古蹟世界文化遺產，越南版故宮', address: '19c Hoàng Diệu, Điện Biên, Ba Đình, Hà Nội', detail: '開放時間：08:00–17:00', fullDetail: '（範例假資料，之後可替換成真的內容）昇龍皇城是越南歷史最悠久的皇城遺址之一，自西元11世紀李朝建都河內以來，歷經李、陳、黎、阮等朝代持續使用，直到19世紀。\n2010年被聯合國教科文組織列為世界文化遺產，是研究越南千年建都史的重要據點。\n園區內保留了端門、敬天殿基座、後樓（公主樓）等遺跡，並展示歷代考古出土文物。\n建議參觀時間約1.5～2小時，售票口在南側入口，售票時間至16:30止。' },
+      { name: '聖約瑟夫大教堂', mapName: "St. Joseph's Cathedral", plusCode: '2RHX+CG', city: 'Hanoi', type: '景點', note: '必去-越南最古老的天主教堂', address: '1 P. Nhà Thờ, Hoàn Kiếm, Hà Nội', detail: '開放時間：08:00–11:00、14:00–17:00。\n穿著限制：進入教堂內部時建議穿著端莊。\n建議穿著：避免短褲、無袖上衣及過度暴露服裝；脫帽並保持安靜', hasDetailPage: false },
       { name: '三十六古街', mapName: 'Hanoi Old Quarter', plusCode: '2VM2+J3', city: 'Hanoi', type: '景點', note: '越南的老城區逛街享受市區風光', address: '2A P. Hàng Bồ, Hoàn Kiếm, Hà Nội', detail: '開放時間：街區全天可逛，熱鬧街區' },
       { name: 'Banh Mi 25', mapName: 'Banh Mi 25', plusCode: '2RPX+CC', city: 'Hanoi', type: '餐廳', note: '必去-最有名的越南麵包，做好排隊的準備', address: '25 P. Hàng Cá, Hoàn Kiếm, Hà Nội', detail: '開放時間：07:00 - 21:00' },
       { name: 'Pho 10 Ly Quoc Su', mapName: 'Pho 10 Ly Quoc Su', plusCode: '2RJX+5G', city: 'Hanoi', type: '餐廳', note: '有名的越南河粉店，有獲得米其林指南', address: '10 P. Lý Quốc Sư, Hoàn Kiếm, Hà Nội', detail: '開放時間：06:00–22:00' },
@@ -233,8 +236,9 @@ class Component extends DCLogic {
       isActive: di === activeDay,
       visible: scrollMode || di === activeDay,
       landmarks: day.landmarks
-        .filter(lm => !highlightsOnly || lm.type === '景點' || lm.type === '餐廳')
-        .map((lm, li) => {
+        .map((lm, li) => ({ lm, li }))
+        .filter(({ lm }) => !highlightsOnly || lm.type === '景點' || lm.type === '餐廳')
+        .map(({ lm, li }) => {
           const id = di + '_' + li;
           const query = encodeURIComponent((lm.mapName || lm.plusCode) + ' ' + lm.city);
           const expanded = !!this.state.expanded[id];
@@ -245,6 +249,8 @@ class Component extends DCLogic {
             typeColor: lm.type === '景點' ? 'var(--accent)' : (TYPE_COLOR[lm.type] || 'oklch(50% 0.02 90)'),
             mapUrl: 'https://www.google.com/maps/embed/v1/place?key=' + MAPS_API_KEY + '&q=' + query + '&zoom=16',
             openUrl: 'https://www.google.com/maps/search/?api=1&query=' + query,
+            detailUrl: './detail.html?day=' + di + '&idx=' + li,
+            hasDetailPage: lm.hasDetailPage ?? (lm.type === '景點'),
             onToggle: () => this.toggle(id)
           };
         })

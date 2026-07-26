@@ -23,7 +23,7 @@ jobs:
       - name: Stage production files only
         run: |
           mkdir dist
-          cp index.html support.js dist/
+          cp index.html support.js detail.html dist/
 
       - name: Inject Google Maps API key
         env:

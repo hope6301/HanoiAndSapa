@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>景點詳細頁｜河內＆沙壩</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#e9e5db;font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-text-size-adjust:100%}
+*{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
+#app{width:100%;max-width:480px;margin:0 auto;min-height:100vh;box-shadow:0 0 40px rgba(0,0,0,.12);overflow:hidden}
+</style>
+</head>
+<body>
+<div id="app"><div style="padding:60px 24px;font:400 14px/1.7 'Noto Sans TC',sans-serif;color:#666;text-align:center">載入中…</div></div>
+<script>
+// 資料來源就是 index.html 裡的 DAYS/THEMES/TYPE_COLOR，用 fetch 抓回原始碼後截出
+// script 區塊裡 class Component 之前的那段常數宣告來取值，避免 DAYS 出現第二份要維護。
+// 部署後 index.html 裡的 MAPS_API_KEY 已經是 GitHub Actions 注入的真實金鑰，這裡一併沿用。
+async function loadData() {
+  const res = await fetch('./index.html');
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const html = await res.text();
+  const scriptMatch = html.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/);
+  if (!scriptMatch) throw new Error('找不到行程資料區塊');
+  const scriptSrc = scriptMatch[1];
+  const cut = scriptSrc.indexOf('class Component');
+  const dataSrc = cut >= 0 ? scriptSrc.slice(0, cut) : scriptSrc;
+  const fn = new Function(dataSrc + '\nreturn { MAPS_API_KEY, TYPE_COLOR, DAYS, THEMES };');
+  return fn();
+}
+
+function esc(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function renderMessage(text) {
+  document.getElementById('app').innerHTML = `
+    <div style="padding:60px 24px;font:400 14px/1.8 'Noto Sans TC',sans-serif;color:#333;text-align:center">
+      ${esc(text)}<br><br>
+      <a href="./index.html" style="color:oklch(48% 0.1 150)">← 返回行程</a>
+    </div>`;
+}
+
+function render({ theme, typeColor, day, lm, mapsApiKey }) {
+  const tColor = lm.type === '景點' ? theme.accent : (typeColor[lm.type] || 'oklch(50% 0.02 90)');
+  const query = encodeURIComponent((lm.mapName || lm.plusCode || lm.name) + ' ' + lm.city);
+  const mapUrl = 'https://www.google.com/maps/embed/v1/place?key=' + mapsApiKey + '&q=' + query + '&zoom=16';
+  const openUrl = 'https://www.google.com/maps/search/?api=1&query=' + query;
+  const detailHtml = esc(lm.fullDetail || lm.detail).replace(/\n/g, '<br>');
+
+  document.title = lm.name + '｜河內＆沙壩';
+  document.getElementById('app').innerHTML = `
+    <div style="background:${theme.pageBg};color:${theme.text};min-height:100vh">
+      <div style="padding:20px 20px 0">
+        <a href="./index.html" style="font:500 12px 'Noto Sans TC',sans-serif;color:${theme.muted};text-decoration:none">← 返回行程</a>
+      </div>
+      <div style="padding:20px 20px 0">
+        <div style="font:500 12px 'Noto Sans TC',sans-serif;letter-spacing:.05em;color:${theme.muted}">${esc(day.shortLabel)}｜${esc(day.title)}</div>
+      </div>
+      <div style="padding:10px 20px 0">
+        <span style="font:600 10px 'Noto Sans TC',sans-serif;letter-spacing:.05em;color:${tColor}">${esc(lm.type)}</span>
+        <div style="font-family:${theme.fontDisplay};font-weight:${theme.displayWeight};font-size:28px;line-height:1.25;margin-top:6px">${esc(lm.name)}</div>
+        <div style="font:400 14px/1.7 'Noto Sans TC',sans-serif;color:${theme.muted};margin-top:10px">${esc(lm.note)}</div>
+      </div>
+      <div style="margin:20px 20px 0;padding-top:16px;border-top:1px solid ${theme.hairline}">
+        <div style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:${theme.text};padding:10px 12px;background:${theme.hairline};border-radius:8px;margin-bottom:14px">${detailHtml}</div>
+        <div style="font:400 12px/1.6 'Noto Sans TC',sans-serif;color:${theme.muted};margin-bottom:10px">地址：${esc(lm.address)}</div>
+        <iframe src="${mapUrl}" style="width:100%;height:220px;border:0;border-radius:10px;display:block" loading="lazy"></iframe>
+        <a href="${openUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:14px;padding:8px 2px;font:500 12px 'Noto Sans TC',sans-serif;color:${theme.accent};text-decoration:none">在 Google Maps 開啟 →</a>
+      </div>
+      <div style="padding:22px 20px 40px;margin-top:8px;border-top:1px solid ${theme.hairline};font:400 12px/1.6 'Noto Sans TC',sans-serif;color:${theme.muted};text-align:center">景點詳細頁・行程內容持續補充</div>
+    </div>
+  `;
+}
+
+(async () => {
+  try {
+    const params = new URLSearchParams(location.search);
+    const dayIdx = Number(params.get('day'));
+    const lmIdx = Number(params.get('idx'));
+    const data = await loadData();
+    const day = data.DAYS[dayIdx];
+    const lm = day && day.landmarks[lmIdx];
+    if (!day || !lm) {
+      renderMessage('找不到這個景點，請確認連結是否正確');
+      return;
+    }
+    render({ theme: data.THEMES['編輯手札'], typeColor: data.TYPE_COLOR, day, lm, mapsApiKey: data.MAPS_API_KEY });
+  } catch (e) {
+    console.error(e);
+    renderMessage('讀取行程資料失敗，請確認是透過網頁伺服器（http/https）開啟此頁面，而不是直接雙擊檔案');
+  }
+})();
+</script>
+</body>
+</html>
