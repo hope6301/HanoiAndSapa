@@ -50,9 +50,40 @@ function render({ theme, typeColor, day, lm, mapsApiKey }) {
   const openUrl = 'https://www.google.com/maps/search/?api=1&query=' + query;
   const detailHtml = esc(lm.fullDetail || lm.detail).replace(/\n/g, '<br>');
 
+  // ① 一句話特色：只有 lm.highlight 有值才渲染，不 fallback 成 note/detail
+  const highlightHtml = lm.highlight ? `
+        <div style="font:700 15px/1.6 'Noto Sans TC',sans-serif;color:${theme.accent};margin-top:8px">${esc(lm.highlight)}</div>` : '';
+
+  // ② 特色標籤：lm.tags 是選填的 string[]
+  const tags = lm.tags ?? [];
+  const tagsHtml = tags.length ? `
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px">
+          ${tags.map(t => `<span style="font:500 11px 'Noto Sans TC',sans-serif;color:${theme.muted};background:${theme.hairline};border:1px solid ${theme.pillBorder};border-radius:999px;padding:4px 10px;display:inline-block">${esc(t)}</span>`).join('')}
+        </div>` : '';
+
+  // ③ 快速資訊列：lm.quickFacts 是選填的 { label, value }[]，通用 key-value 結構
+  const quickFacts = lm.quickFacts ?? [];
+  const quickFactsHtml = quickFacts.length ? `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
+          ${quickFacts.map(f => `
+          <div style="background:${theme.hairline};border-radius:10px;padding:10px 12px">
+            <div style="font:500 10px 'Noto Sans TC',sans-serif;letter-spacing:.03em;color:${theme.muted}">${esc(f.label)}</div>
+            <div style="font:700 15px 'Noto Sans TC',sans-serif;color:${theme.text};margin-top:2px">${esc(f.value)}</div>
+          </div>`).join('')}
+        </div>` : '';
+
   document.title = lm.name + '｜河內＆沙壩';
   document.getElementById('app').innerHTML = `
     <div style="background:${theme.pageBg};color:${theme.text};min-height:100vh">
+      <style>
+        .dtl-details summary{list-style:none;cursor:pointer}
+        .dtl-details summary::-webkit-details-marker{display:none}
+        .dtl-details .dtl-chev{display:inline-block;transition:transform .2s}
+        .dtl-details[open] .dtl-chev{transform:rotate(180deg)}
+        .dtl-details .dtl-label-open{display:none}
+        .dtl-details[open] .dtl-label-closed{display:none}
+        .dtl-details[open] .dtl-label-open{display:inline}
+      </style>
       <div style="padding:20px 20px 0">
         <a href="./index.html" style="font:500 12px 'Noto Sans TC',sans-serif;color:${theme.muted};text-decoration:none">← 返回行程</a>
       </div>
@@ -62,10 +93,19 @@ function render({ theme, typeColor, day, lm, mapsApiKey }) {
       <div style="padding:10px 20px 0">
         <span style="font:600 10px 'Noto Sans TC',sans-serif;letter-spacing:.05em;color:${tColor}">${esc(lm.type)}</span>
         <div style="font-family:${theme.fontDisplay};font-weight:${theme.displayWeight};font-size:28px;line-height:1.25;margin-top:6px">${esc(lm.name)}</div>
+        ${highlightHtml}
         <div style="font:400 14px/1.7 'Noto Sans TC',sans-serif;color:${theme.muted};margin-top:10px">${esc(lm.note)}</div>
+        ${tagsHtml}
+        ${quickFactsHtml}
       </div>
       <div style="margin:20px 20px 0;padding-top:16px;border-top:1px solid ${theme.hairline}">
-        <div style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:${theme.text};padding:10px 12px;background:${theme.hairline};border-radius:8px;margin-bottom:14px">${detailHtml}</div>
+        <details class="dtl-details" style="margin-bottom:14px;border-radius:8px;overflow:hidden">
+          <summary style="display:flex;justify-content:space-between;align-items:center;gap:8px;font:600 13px 'Noto Sans TC',sans-serif;color:${theme.text};padding:10px 12px;background:${theme.hairline}">
+            <span><span class="dtl-label-closed">展開詳細介紹</span><span class="dtl-label-open">詳細介紹</span></span>
+            <span class="dtl-chev">↓</span>
+          </summary>
+          <div style="font:400 13px/1.7 'Noto Sans TC',sans-serif;color:${theme.text};padding:10px 12px;background:${theme.hairline}">${detailHtml}</div>
+        </details>
         <div style="font:400 12px/1.6 'Noto Sans TC',sans-serif;color:${theme.muted};margin-bottom:10px">地址：${esc(lm.address)}</div>
         <iframe src="${mapUrl}" style="width:100%;height:220px;border:0;border-radius:10px;display:block" loading="lazy"></iframe>
         <a href="${openUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:14px;padding:8px 2px;font:500 12px 'Noto Sans TC',sans-serif;color:${theme.accent};text-decoration:none">在 Google Maps 開啟 →</a>
