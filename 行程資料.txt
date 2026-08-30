@@ -15,6 +15,15 @@ note（簡介）: 各自前往機場
 address（地址）: Phú Trạch, Sóc Sơn, Hà Nội
 detail（詳情）: 去程航班：長榮 BR397 09:00-11:05 | 華航 CI0791 08:20-10:30
 
+name（名稱）: 寄放行李
+mapName（地圖搜尋名）: Hanoi Sena Boutique hotel
+plusCode（定位碼）: 2RJX+RC
+city（城市）: Hanoi
+type（分類）: 景點
+note（簡介）: 寄放行李的地方，應該會是在一間hotel裡
+address（地址）: 20 P. Hàng Hòm, Phố cổ Hà Nội, Hoàn Kiếm, Hà Nội, 越南
+detail（詳情）: https://hanoisenahotels.com/hotel/hanoi-sena-boutique-hotel/
+
 name（名稱）: Pho 10 Ly Quoc Su
 mapName（地圖搜尋名）: Pho 10 Ly Quoc Su
 plusCode（定位碼）: 2RJX+5G
@@ -294,6 +303,7 @@ tags（特色標籤）: 老城酒吧, 晚上小酌, 教堂旁邊, 夜生活
 quickFacts（快速資訊）: 營業時間=10:00–00:00; 類型=酒吧; 適合=晚餐後; 位置=老城區二樓
 fullDetail（完整介紹）: Hanoi House Cocktail Bar 位在老城區，屬於適合晚上續攤的小酒吧選擇。若白天已經在市區逛了一圈，這裡可以當成晚餐後的放鬆點。
 
+
 第四天｜9/12 (六)
 標題: 河內深度一日
 摘要: 陵寢古寺、歷史遺跡、米其林美食馬拉松
@@ -448,7 +458,7 @@ fullDetail（完整介紹）: Eggyolk Coffee 以蛋咖啡與舒服的咖啡館�
 
 name（名稱）: Pizza 4P’s Tràng Tiền
 mapName（地圖搜尋名）: Pizza 4P’s Tràng Tiền
-plusCode（定位碼）: 2VF3+XM Cua Nam, 河內越南
+plusCode（定位碼）: 2VF3+XM
 city（城市）: Hanoi
 type（分類）: 餐廳
 note（簡介）: 預約時間:2026/11/13 11:30 吃Pizza的，回台灣前的最後一餐
@@ -468,6 +478,7 @@ type（分類）: 交通
 note（簡介）: 最晚越南時間約16:00要抵達
 address（地址）: Phú Trạch, Sóc Sơn, Hà Nội
 detail（詳情）: 回程航班：長榮 BR386 18:00-21:55 | 華航 CI0794 17:50-21:45
+
 
 第六天｜備選行程
 標題: 有時間就去
