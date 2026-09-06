@@ -342,7 +342,7 @@ quickFacts（快速資訊）: 營業時間=10:00–00:00; 類型=酒吧; 適合=
 fullDetail（完整介紹）: Hanoi House Cocktail Bar 位在老城區，屬於適合晚上續攤的小酒吧選擇。若白天已經在市區逛了一圈，這裡可以當成晚餐後的放鬆點。
 
 name（名稱）: 河內住宿
-mapName（地圖搜尋名）: 河內住宿
+mapName（地圖搜尋名）:
 plusCode（定位碼）: 2VP3+649
 city（城市）: Hanoi
 type（分類）: 住宿
@@ -484,7 +484,7 @@ quickFacts（快速資訊）: 營業時間=15:00–00:00; 類型=酒吧; 建議=
 fullDetail（完整介紹）: The Haflington 是河內偏質感路線的酒吧選擇，適合安排在晚餐後作為收尾。整體氛圍較適合坐下來慢慢喝一杯，不是匆匆經過型的地方。
 
 name（名稱）: 河內住宿
-mapName（地圖搜尋名）: 河內住宿
+mapName（地圖搜尋名）:
 plusCode（定位碼）: 2VP3+649
 city（城市）: Hanoi
 type（分類）: 住宿
